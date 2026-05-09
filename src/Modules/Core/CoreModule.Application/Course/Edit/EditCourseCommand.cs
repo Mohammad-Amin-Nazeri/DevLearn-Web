@@ -1,6 +1,6 @@
 ﻿using Common.Application;
 using Common.Application.FileUtil;
-using Common.Application.FileUtil.Interfaces;
+using Common.Application.FileUtil.StorageInterfaces;
 using Common.Application.SecurityUtil;
 using Common.Domain.ValueObjects;
 using CoreModule.Application._Utilities;
@@ -35,12 +35,12 @@ public class EditCourseCommand : IBaseCommand
 
 class EditCourseCommandHandler : IBaseCommandHandler<EditCourseCommand>
 {
-    private readonly ILocalFileService _localFileService;
+    private readonly IStorageService _storageService;
     private readonly ICourseRepository _repository;
     private readonly ICourseDomainService _domainService;
-    public EditCourseCommandHandler(ILocalFileService localFileService, ICourseDomainService domainService, ICourseRepository repository)
+    public EditCourseCommandHandler(IStorageService storageService, ICourseDomainService domainService, ICourseRepository repository)
     {
-        _localFileService = localFileService;
+        _storageService = storageService;
         _domainService = domainService;
         _repository = repository;
     }
@@ -64,12 +64,12 @@ class EditCourseCommandHandler : IBaseCommandHandler<EditCourseCommand>
                 return OperationResult.Error("فایل وارد شده نامعتبر است");
             }
 
-            videoPath = await _localFileService.SaveFileAndGenerateName(request.VideoFile, CoreModuleDirectories.CourseDemo(course.Id));
+            videoPath = await _storageService.SaveFileAndGenerateName(request.VideoFile, CoreModuleDirectories.CourseDemo(course.Id));
         }
 
         if (request.ImageFile.IsImage())
         {
-            imageName = await _localFileService.SaveFileAndGenerateName(request.ImageFile!, CoreModuleDirectories.CourseImage);
+            imageName = await _storageService.SaveFileAndGenerateName(request.ImageFile!, CoreModuleDirectories.CourseImage);
         }
 
 
@@ -91,12 +91,12 @@ class EditCourseCommandHandler : IBaseCommandHandler<EditCourseCommand>
     {
         if (isUploadNewVideo && string.IsNullOrWhiteSpace(video) == false)
         {
-            _localFileService.DeleteFile(CoreModuleDirectories.CourseDemo(course.Id), video);
+            _storageService.DeleteFile(CoreModuleDirectories.CourseDemo(course.Id), video);
         }
 
         if (isUploadNewImage)
         {
-            _localFileService.DeleteFile(CoreModuleDirectories.CourseImage, image);
+            _storageService.DeleteFile(CoreModuleDirectories.CourseImage, image);
         }
     }
 }

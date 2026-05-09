@@ -1,6 +1,6 @@
 ﻿using Common.Application;
 using Common.Application.FileUtil;
-using Common.Application.FileUtil.Interfaces;
+using Common.Application.FileUtil.StorageInterfaces;
 using Common.Domain.Utils;
 using CoreModule.Application._Utilities;
 using CoreModule.Domain.Course.Models;
@@ -25,14 +25,13 @@ public class AddCourseEpisodeCommand : IBaseCommand
 public class CreateCourseEpisodeCommandHandler : IBaseCommandHandler<AddCourseEpisodeCommand>
 {
     private readonly ICourseRepository _repository;
-    private readonly IFtpFileService _ftpFileService;
-    private readonly ILocalFileService _localFileService;
+    private readonly IStorageService _storageService;
 
 
-    public CreateCourseEpisodeCommandHandler(ICourseRepository repository, IFtpFileService ftpFileService)
+    public CreateCourseEpisodeCommandHandler(ICourseRepository repository, IStorageService storageService)
     {
         _repository = repository;
-        _ftpFileService = ftpFileService;
+        _storageService= storageService;
     }
 
     public async Task<OperationResult> Handle(AddCourseEpisodeCommand request, CancellationToken cancellationToken)
@@ -57,14 +56,14 @@ public class CreateCourseEpisodeCommandHandler : IBaseCommandHandler<AddCourseEp
 
     private async Task SaveFiles(AddCourseEpisodeCommand request, Episode episode)
     {
-        await _localFileService.SaveFile(request.VideoFile,
+        await _storageService.SaveFile(request.VideoFile,
             CoreModuleDirectories.CourseEpisode(request.CourseId, episode.Token), episode.VideoName);
 
         if (request.AttachmentFile != null)
         {
             if (request.AttachmentFile.IsValidCompressFile())
             {
-                await _localFileService.SaveFile(request.VideoFile,
+                await _storageService.SaveFile(request.VideoFile,
                     CoreModuleDirectories.CourseEpisode(request.CourseId, episode.Token), episode.AttachmentName!);
             }
         }

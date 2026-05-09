@@ -1,4 +1,4 @@
-﻿using Common.Application.FileUtil.Interfaces;
+﻿using Common.Application.FileUtil.StorageInterfaces;
 using CoreModule.Facade.Category;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,11 +7,11 @@ namespace DevLearn.Web.Controllers
     public class AjaxController : Controller
     {
         private readonly ICourseCategoryFacade _categoryFacade;
-        private readonly ILocalFileService _fileService;
-        public AjaxController(ICourseCategoryFacade categoryFacade, ILocalFileService fileService)
+        private readonly IStorageService _storageService;
+        public AjaxController(ICourseCategoryFacade categoryFacade, IStorageService storageService)
         {
             _categoryFacade = categoryFacade;
-            _fileService = fileService;
+            _storageService = storageService;
         }
 
         [Route("/ajax/getCategoryChildren")]
@@ -34,7 +34,7 @@ namespace DevLearn.Web.Controllers
             {
                 return null;
             }
-            var fileName = await _fileService.SaveFileAndGenerateName(upload, "wwwroot/images/upload");
+            var fileName = await _storageService.SaveFileAndGenerateName(upload, "wwwroot/images/upload");
 
             var url = $"/images/upload/{fileName}";
             return Json(new { uploaded = true, url });

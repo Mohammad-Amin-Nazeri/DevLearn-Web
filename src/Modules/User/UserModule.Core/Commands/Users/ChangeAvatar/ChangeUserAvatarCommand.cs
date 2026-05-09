@@ -1,5 +1,5 @@
 ﻿using Common.Application;
-using Common.Application.FileUtil.Interfaces;
+using Common.Application.FileUtil.StorageInterfaces;
 using Common.Application.SecurityUtil;
 using Common.EventBus.Abstractions;
 using Common.EventBus.Events;
@@ -20,13 +20,13 @@ public class ChangeUserAvatarCommand : IBaseCommand
 public class ChangeUserAvatarCommandHandler : IBaseCommandHandler<ChangeUserAvatarCommand>
 {
     private readonly UserContext _context;
-    private readonly ILocalFileService _localFileService;
+    private readonly IStorageService _storageService;
     private readonly IEventBus _eventBus;
 
-    public ChangeUserAvatarCommandHandler(UserContext context, ILocalFileService localFileService, IEventBus eventBus)
+    public ChangeUserAvatarCommandHandler(UserContext context, IStorageService storageService, IEventBus eventBus)
     {
         _context = context;
-        _localFileService = localFileService;
+        _storageService = storageService;
         _eventBus = eventBus;
     }
 
@@ -44,7 +44,7 @@ public class ChangeUserAvatarCommandHandler : IBaseCommandHandler<ChangeUserAvat
         }
 
         var avatar =
-            await _localFileService.SaveFileAndGenerateName(request.AvatarFile, UserModuleDirectories.UserAvatar);
+            await _storageService.SaveFileAndGenerateName(request.AvatarFile, UserModuleDirectories.UserAvatar);
         user.Avatar = avatar;
         _context.Users.Update(user);
         await _context.SaveChangesAsync(cancellationToken);

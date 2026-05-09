@@ -1,6 +1,6 @@
 ﻿using Common.Application;
 using Common.Application.FileUtil;
-using Common.Application.FileUtil.Interfaces;
+using Common.Application.FileUtil.StorageInterfaces;
 using Common.Domain.ValueObjects;
 using CoreModule.Application._Utilities;
 using CoreModule.Domain.Course.DomainServices;
@@ -31,21 +31,19 @@ public class CreateCourseCommand : IBaseCommand
 
 class CreateCourseCommandHandler : IBaseCommandHandler<CreateCourseCommand>
 {
-    private readonly IFtpFileService _ftpFileService;
-    private readonly ILocalFileService _localFileService;
+    private readonly IStorageService _storageService;
     private readonly ICourseRepository _repository;
     private readonly ICourseDomainService _domainService;
-    public CreateCourseCommandHandler(IFtpFileService fileService, ILocalFileService localFileService, ICourseDomainService domainService, ICourseRepository repository)
+    public CreateCourseCommandHandler(IStorageService storageService, ICourseDomainService domainService, ICourseRepository repository)
     {
-        _ftpFileService = fileService;
-        _localFileService = localFileService;
+        _storageService = storageService;
         _domainService = domainService;
         _repository = repository;
     }
 
     public async Task<OperationResult> Handle(CreateCourseCommand request, CancellationToken cancellationToken)
     {
-        var imageName = await _localFileService.SaveFileAndGenerateName(request.ImageFile, CoreModuleDirectories.CourseImage);
+        var imageName = await _storageService.SaveFileAndGenerateName(request.ImageFile, CoreModuleDirectories.CourseImage);
 
 
         string videoPath = null;
@@ -57,7 +55,7 @@ class CreateCourseCommandHandler : IBaseCommandHandler<CreateCourseCommand>
                 return OperationResult.Error("فایل وارد شده نامعتبر است");
             }
 
-            //videoPath = await _ftpFileService.SaveFileAndGenerateName(request.VideoFile, CoreModuleDirectories.CourseDemo(courseId));
+            videoPath = await _storageService.SaveFileAndGenerateName(request.VideoFile, CoreModuleDirectories.CourseDemo(courseId));
         }
 
 

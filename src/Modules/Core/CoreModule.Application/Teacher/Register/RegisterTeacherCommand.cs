@@ -1,5 +1,5 @@
 ﻿using Common.Application;
-using Common.Application.FileUtil.Interfaces;
+using Common.Application.FileUtil.StorageInterfaces;
 using CoreModule.Application._Utilities;
 using CoreModule.Domain.Teacher.DomainServices;
 using CoreModule.Domain.Teacher.Repository;
@@ -19,17 +19,17 @@ public class RegisterTeacherCommandHandler : IBaseCommandHandler<RegisterTeacher
 {
     private readonly ITeacherRepository _repository;
     private readonly ITeacherDomainService _domainService;
-    private readonly ILocalFileService _localFileService;
-    public RegisterTeacherCommandHandler(ITeacherRepository repository, ITeacherDomainService domainService, ILocalFileService localFileService)
+    private readonly IStorageService _storageService;
+    public RegisterTeacherCommandHandler(ITeacherRepository repository, ITeacherDomainService domainService, IStorageService storageService)
     {
         _repository = repository;
         _domainService = domainService;
-        _localFileService = localFileService;
+        _storageService = storageService;
     }
 
     public async Task<OperationResult> Handle(RegisterTeacherCommand request, CancellationToken cancellationToken)
     {
-        var cvFileName = await _localFileService.SaveFileAndGenerateName(request.CvFile, CoreModuleDirectories.CvFileNames);
+        var cvFileName = await _storageService.SaveFileAndGenerateName(request.CvFile, CoreModuleDirectories.CvFileNames);
 
         var teacher = new Domain.Teacher.Models.Teacher(cvFileName, request.UserName, request.UserId, _domainService);
         _repository.Add(teacher);

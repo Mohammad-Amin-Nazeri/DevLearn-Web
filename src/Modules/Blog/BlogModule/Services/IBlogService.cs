@@ -7,7 +7,7 @@ using BlogModule.Services.DTOs.Command;
 using BlogModule.Services.DTOs.Query;
 using BlogModule.Utils;
 using Common.Application;
-using Common.Application.FileUtil.Interfaces;
+using Common.Application.FileUtil.StorageInterfaces;
 using Common.Application.SecurityUtil;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,14 +34,14 @@ class BlogService : IBlogService
     private readonly ICategoryRepository _categoryRepository;
     private readonly IPostRepository _postRepository;
     private readonly IMapper _mapper;
-    private readonly ILocalFileService _localFileService;
+    private readonly IStorageService _storageService;
     private readonly BlogContext _context;
-    public BlogService(ICategoryRepository categoryRepository, IMapper mapper, IPostRepository postRepository, ILocalFileService localFileService, BlogContext context)
+    public BlogService(ICategoryRepository categoryRepository, IMapper mapper, IPostRepository postRepository, IStorageService storageService, BlogContext context)
     {
         _categoryRepository = categoryRepository;
         _mapper = mapper;
         _postRepository = postRepository;
-        _localFileService = localFileService;
+        _storageService = storageService;
         _context = context;
     }
 
@@ -127,7 +127,7 @@ class BlogService : IBlogService
         if (command.ImageFile.IsImage() == false)
             return OperationResult.Error("عکس وارد شده نامعتبر است");
 
-        var imageName = await _localFileService.SaveFileAndGenerateName(command.ImageFile, BlogDirectories.PostImage);
+        var imageName = await _storageService.SaveFileAndGenerateName(command.ImageFile, BlogDirectories.PostImage);
         post.ImageName = imageName;
         post.Visit = 1;
         post.Description = post.Description.SanitizeText();
@@ -151,7 +151,7 @@ class BlogService : IBlogService
                 return OperationResult.Error("عکس وارد شده نامعتبر است");
             else
             {
-                var imageName = await _localFileService.SaveFileAndGenerateName(command.ImageFile, BlogDirectories.PostImage);
+                var imageName = await _storageService.SaveFileAndGenerateName(command.ImageFile, BlogDirectories.PostImage);
                 post.ImageName = imageName;
             }
 
@@ -172,7 +172,7 @@ class BlogService : IBlogService
 
         _postRepository.Delete(post);
         await _postRepository.Save();
-        _localFileService.DeleteFile(BlogDirectories.PostImage, post.ImageName);
+        _storageService.DeleteFile(BlogDirectories.PostImage, post.ImageName);
         return OperationResult.Success();
     }
 

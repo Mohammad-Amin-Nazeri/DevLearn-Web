@@ -1,7 +1,7 @@
 using BlogModule;
 using CommentModule;
-using Common.Application.FileUtil.Interfaces;
-using Common.Application.FileUtil.Services;
+using Common.Application.FileUtil.StorageInterfaces;
+using Common.Application.FileUtil.StorageServices;
 using CoreModule.Config;
 using DevLearn.Web.Infrastructure;
 using DevLearn.Web.Infrastructure.JwtUtil;
@@ -14,8 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 // Add services to the container.
 
-builder.Services.AddScoped<ILocalFileService, LocalFileService>();
-builder.Services.AddScoped<IFtpFileService, FtpFileService>();
+builder.Services.AddScoped<IStorageService,FileStorageService>();
 
 builder.Services.AddTransient<TeacherActionFilter>();
 builder.Services.AddControllersWithViews();

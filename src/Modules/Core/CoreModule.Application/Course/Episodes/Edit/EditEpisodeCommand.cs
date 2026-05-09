@@ -1,7 +1,7 @@
 ﻿using AngleSharp.Io;
 using Common.Application;
 using Common.Application.FileUtil;
-using Common.Application.FileUtil.Interfaces;
+using Common.Application.FileUtil.StorageInterfaces;
 using CoreModule.Application._Utilities;
 using CoreModule.Application.Course.Create;
 using CoreModule.Application.Course.Episodes.Add;
@@ -28,12 +28,12 @@ public class EditEpisodeCommand : IBaseCommand
 class EditEpisodeCommandHandler : IBaseCommandHandler<EditEpisodeCommand>
 {
     private readonly ICourseRepository _repository;
-    private readonly ILocalFileService _localFileService;
+    private readonly IStorageService _storageService;
 
-    public EditEpisodeCommandHandler(ICourseRepository repository, ILocalFileService localFileService)
+    public EditEpisodeCommandHandler(ICourseRepository repository, IStorageService storageService)
     {
         _repository = repository;
-        _localFileService = localFileService;
+        _storageService = storageService;
     }
 
     public async Task<OperationResult> Handle(EditEpisodeCommand request, CancellationToken cancellationToken)
@@ -70,7 +70,7 @@ class EditEpisodeCommandHandler : IBaseCommandHandler<EditEpisodeCommand>
         if (attachment.IsValidCompressFile())
         {
             var attName = episode.VideoName.Replace(".mp4", Path.GetExtension(attachment.FileName));
-            await _localFileService.SaveFile(attachment, CoreModuleDirectories.CourseEpisode(courseId, episode.Token),
+            await _storageService.SaveFile(attachment, CoreModuleDirectories.CourseEpisode(courseId, episode.Token),
                 attName);
             return attName;
         }
@@ -82,7 +82,7 @@ class EditEpisodeCommandHandler : IBaseCommandHandler<EditEpisodeCommand>
     {
         if (videoFile.IsValidMp4File())
         {
-            await _localFileService.SaveFile(videoFile, CoreModuleDirectories.CourseEpisode(courseId, episode.Token),
+            await _storageService.SaveFile(videoFile, CoreModuleDirectories.CourseEpisode(courseId, episode.Token),
                 episode.VideoName);
         }
     }

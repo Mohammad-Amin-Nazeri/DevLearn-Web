@@ -1,9 +1,13 @@
-﻿using Common.Application.FileUtil.Interfaces;
+namespace Common.Application.FileUtil.StorageServices;
+
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using Common.Application.FileUtil.StorageInterfaces;
+using Common.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 
-namespace Common.Application.FileUtil.Services;
-
-public class LocalFileService : ILocalFileService
+public class FileStorageService : IStorageService
 {
     public void DeleteDirectory(string directoryPath)
     {
@@ -14,7 +18,7 @@ public class LocalFileService : ILocalFileService
     public void DeleteFile(string path, string fileName)
     {
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), path,
-            fileName);
+              fileName);
         if (File.Exists(filePath))
             File.Delete(filePath);
     }
@@ -28,7 +32,7 @@ public class LocalFileService : ILocalFileService
     public async Task SaveFile(IFormFile file, string directoryPath)
     {
         if (file == null)
-            throw new InvalidDataException("file is Null");
+            throw new Exception();
 
         var fileName = file.FileName;
 
@@ -41,30 +45,35 @@ public class LocalFileService : ILocalFileService
 
         await file.CopyToAsync(stream);
     }
+
     public async Task SaveFile(IFormFile file, string directoryPath, string fileName)
     {
-        if (file == null)
-            throw new InvalidDataException("file is Null");
+        {
+            if (file == null)
+                throw new Exception();
 
-        var folderName = Path.Combine(Directory.GetCurrentDirectory(), directoryPath.Replace("/", "\\"));
-        if (!Directory.Exists(folderName))
-            Directory.CreateDirectory(folderName);
+            var folderName = Path.Combine(Directory.GetCurrentDirectory(), directoryPath.Replace("/", "\\"));
+            if (!Directory.Exists(folderName))
+                Directory.CreateDirectory(folderName);
 
-        var path = Path.Combine(folderName, fileName);
-        using var stream = new FileStream(path, FileMode.Create);
+            var path = Path.Combine(folderName, fileName);
+            using var stream = new FileStream(path, FileMode.Create);
 
-        await file.CopyToAsync(stream);
+            await file.CopyToAsync(stream);
+        }
     }
+
     public async Task<string> SaveFileAndGenerateName(IFormFile file, string directoryPath)
     {
         if (file == null)
-            throw new InvalidDataException("file is Null");
+            throw new Exception();
+
 
         var fileName = file.FileName;
 
         fileName = Guid.NewGuid() + DateTime.Now.TimeOfDay.ToString()
-            .Replace(":", "")
-            .Replace(".", "") + Path.GetExtension(fileName);
+                                      .Replace(":", "")
+                                      .Replace(".", "") + Path.GetExtension(fileName);
 
         var folderName = Path.Combine(Directory.GetCurrentDirectory(), directoryPath.Replace("/", "\\"));
         if (!Directory.Exists(folderName))

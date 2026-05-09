@@ -1,5 +1,5 @@
 ﻿using Common.Application;
-using Common.Application.FileUtil.Interfaces;
+using Common.Application.FileUtil.StorageInterfaces;
 using CoreModule.Application._Utilities;
 using CoreModule.Domain.Course.Repository;
 
@@ -10,11 +10,11 @@ public record DeleteCourseEpisodeCommand(Guid CourseId, Guid EpisodeId) : IBaseC
 class DeleteCourseEpisodeCommandHandler : IBaseCommandHandler<DeleteCourseEpisodeCommand>
 {
     private readonly ICourseRepository _repository;
-    private readonly ILocalFileService _localFileService;
-    public DeleteCourseEpisodeCommandHandler(ICourseRepository repository, ILocalFileService localFileService)
+    private readonly IStorageService _storageService;
+    public DeleteCourseEpisodeCommandHandler(ICourseRepository repository, IStorageService storageService)
     {
         _repository = repository;
-        _localFileService = localFileService;
+        _storageService = storageService;
     }
 
     public async Task<OperationResult> Handle(DeleteCourseEpisodeCommand request, CancellationToken cancellationToken)
@@ -27,7 +27,7 @@ class DeleteCourseEpisodeCommandHandler : IBaseCommandHandler<DeleteCourseEpisod
 
         var episode = course.DeleteEpisode(request.EpisodeId);
         await _repository.Save();
-        _localFileService.DeleteDirectory(CoreModuleDirectories.CourseEpisode(course.Id, episode.Token));
+        _storageService.DeleteDirectory(CoreModuleDirectories.CourseEpisode(course.Id, episode.Token));
         return OperationResult.Success();
     }
 }
