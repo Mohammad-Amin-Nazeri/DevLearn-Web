@@ -1,0 +1,51 @@
+﻿@using CoreModule.Facade.Category
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/Bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/css/main.min.css">
+    <link rel="stylesheet" href="/css/custom.css" asp-append-version="true">
+    @await RenderSectionAsync("meta",false)
+</head>
+@inject ICourseCategoryFacade _CategoryFacade
+@{
+    var categories = await _CategoryFacade.GetMainCategories();
+}
+<body>
+    <div class="overlay"></div>
+    <div class="loading">
+        <img src="/global/loading.svg" alt="loading...">
+    </div>
+    <partial name="Header/_MobileMenu" />
+    <header>
+        <partial name="Header/_TopNav" />
+        @await RenderSectionAsync("middel_header",required:false)
+        <partial name="Header/_MainMenu" model="categories" />
+    </header>
+    @RenderBody()
+    <partial name="_Footer" />
+    <div id="token-value">
+        @Html.AntiForgeryToken()
+    </div>
+    <script src="/js/jquery.3.2.1.min.js"></script>
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/Bootstrap/bootstrap.min.js"></script>
+    <script src="/js/Bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/particles.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/global/global.js"></script>
+    <script src="/js/custom.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts",false)
+
+</body>
+
+</html>

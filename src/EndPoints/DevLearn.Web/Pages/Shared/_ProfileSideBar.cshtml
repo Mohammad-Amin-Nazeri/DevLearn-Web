@@ -1,0 +1,98 @@
+﻿@using DevLearn.Web.Infrastructure
+@using DevLearn.Web.Infrastructure
+@using UserModule.Core
+@using UserModule.Core.Services
+@inject IUserFacade _UserFacade
+@{
+    var user = await _UserFacade.GetUserByPhoneNumber(User.GetPhoneNumber());
+    var currentPath = Context.Request.Path.ToString().ToLower();
+}
+
+<div class="col-12 col-xl-3 col-lg-3 col-md-4">
+    <div class="profile-menu shadow-lg">
+        <div class="avatar">
+            <a href="#" title="خروج" data-toggle="tooltip" data-placement="top" class="sign-out">
+                <i class="zmdi zmdi-power text-danger"></i>
+            </a>
+            <div class="image">
+                <form method="post" action="/profile" id="change_avatar" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <a href="javascript:void(0)" title="تغییر آواتار" data-toggle="tooltip">
+                        <input type="file" accept="image/*" id="upImgAvatar" name="avatar" class="ProfileAvatarInput">
+                        <i class="zmdi zmdi-edit"></i>
+                    </a>
+                    <img src="@UserModuleDirectories.GetUserAvatar(user!.Avatar)" alt="@user.FullName">
+                </form>
+            </div>
+            <p>@user.Name @user.Family</p>
+        </div>
+        <div class="showMenu">
+            <a href="javascript:void(0)">
+                نمایش منو
+            </a>
+            <i class="fa fa-chevron-down pull-left"></i>
+
+        </div>
+        <ul>
+            <li>
+                <a href="/profile" class="@(currentPath=="/profile"?"selected":null)">
+                    <i class="zmdi zmdi-view-dashboard"></i>
+                    داشبورد
+
+                </a>
+            </li>
+            <li>
+                <a href="/profile/edit" class="@(currentPath=="/profile/edit"?"selected":null)">
+                    <i class="fa  fa-user-edit"></i>
+
+                    ویرایش حساب کاربری
+                </a>
+            </li>
+            <li>
+                <a href="/profile/changePassword" class="@(currentPath=="/profile/changepassword"?"selected":null)">
+                    <i class="fa fa-edit"></i>
+                    تغییر کلمه عبور
+                </a>
+            </li>
+
+            <li>
+                <a href="/profile/tickets" class="@(currentPath=="/profile/tickets"?"selected":null)">
+                    <i class="fa fa-paper-plane"></i>
+                    تیکت ها
+                </a>
+            </li>
+            <li>
+                <a href="/profile/orders" class="@(currentPath=="/profile/orders"?"selected":null)">
+                    <i class="zmdi zmdi-gradient"></i>
+                    فاکتور ها
+                </a>
+            </li>
+            <li>
+                <a href="/profile/courses" class="@(currentPath=="/profile/courses"?"selected":null)">
+                    <i class="fa fa-graduation-cap"></i>
+                    دوره های من
+                </a>
+            </li>
+            <li>
+                <a href="/profile/comments">
+                    <i class="fa fa-comments-o"></i>
+                    نظرات
+                </a>
+            </li>
+            <li>
+                <a href="/profile/notifications" class="@(currentPath=="/profile/notifications"?"selected":null)">
+                    <i class="zmdi zmdi-notifications"></i>
+
+                    پیغام ها
+                </a>
+            </li>
+            <li>
+                <a href="/auth/logout">
+                    <i class="fa fa-sign-out"></i>
+                    خروج
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>

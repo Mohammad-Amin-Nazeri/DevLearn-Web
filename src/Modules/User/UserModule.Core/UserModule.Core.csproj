@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Common.EventBus\Common.EventBus.csproj" />
+    <ProjectReference Include="..\..\..\Common\Common.Query\Common.Query.csproj" />
+    <ProjectReference Include="..\UserModule.Data\UserModule.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\Notifications\Create\" />
+    <Folder Include="Commands\Roles\Delete\" />
+    <Folder Include="Commands\Users\Edit\" />
+    <Folder Include="Commands\Users\ChangePassword\" />
+    <Folder Include="Commands\Users\Register\" />
+    <Folder Include="Queries\Notifications\GetFilter\" />
+    <Folder Include="Queries\Roles\GetById\" />
+    <Folder Include="Services\" />
+    <Folder Include="Queries\_DTOs\" />
+    <Folder Include="Queries\Users\GetById\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.4.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Hosting.Abstractions">
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\7.0.4\ref\net7.0\Microsoft.Extensions.Hosting.Abstractions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,30 @@
+﻿@model List<CoreModule.Query.Category._DTOs.CourseCategoryDto>
+<div class="last-header container-fluid">
+    <ul class="main-menu">
+        @foreach (var item in Model)
+        {
+            var hasChild = item.Children.Any();
+
+            <li class="menu">
+                <a href="/courses?category=@item.Slug">
+                    @item.Title
+                    @if (hasChild)
+                    {
+                        <i class="zmdi zmdi-chevron-down"></i>
+                    }
+                </a>
+                @if (hasChild)
+                {
+                    <ul class="category">
+                        @foreach (var child in item.Children)
+                        {
+                            <li>
+                                <a href="/courses?category=@item.Slug">@child.Title</a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </li>
+        }
+    </ul>
+</div>

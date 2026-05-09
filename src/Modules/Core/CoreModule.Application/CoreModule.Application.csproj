@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Category\Create\" />
+    <Folder Include="Category\AddChild\" />
+    <Folder Include="Course\Create\" />
+    <Folder Include="Course\Edit\" />
+    <Folder Include="Course\Episodes\Edit\" />
+    <Folder Include="Course\Episodes\Accept\" />
+    <Folder Include="Course\Episodes\Delete\" />
+    <Folder Include="Course\Sections\EditSection\" />
+    <Folder Include="Course\Sections\DeleteSection\" />
+    <Folder Include="Teacher\_EventHandlers\" />
+    <Folder Include="_Utilities\" />
+    <Folder Include="Teacher\AcceptRequest\" />
+    <Folder Include="Teacher\Register\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Common.Application\Common.Application.csproj" />
+    <ProjectReference Include="..\..\..\Common\Common.EventBus\Common.EventBus.csproj" />
+    <ProjectReference Include="..\CoreModule.Domain\CoreModule.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

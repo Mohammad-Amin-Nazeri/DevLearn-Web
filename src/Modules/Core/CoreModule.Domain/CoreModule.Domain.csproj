@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Course\Events\" />
+    <Folder Include="Course\Exceptions\" />
+    <Folder Include="Course\DomainServices\" />
+    <Folder Include="Course\Models\" />
+    <Folder Include="Course\Enums\" />
+    <Folder Include="Course\Repository\" />
+    <Folder Include="HelperEntities\Repositories\" />
+    <Folder Include="Order\Models\" />
+    <Folder Include="Order\Repositories\" />
+    <Folder Include="Teacher\Enums\" />
+    <Folder Include="Teacher\Models\" />
+    <Folder Include="Teacher\Repository\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Common.Domain\Common.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
